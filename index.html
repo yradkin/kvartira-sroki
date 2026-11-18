@@ -86,7 +86,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .phase{padding:0;margin-bottom:10px;scroll-margin-top:12px}
 .phase>summary{list-style:none;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:16px 18px;cursor:pointer}
 .phase>summary::-webkit-details-marker{display:none}
-.phase .pt{font-family:var(--disp);font-weight:500;font-size:15px}
+.phase .pt{font-family:var(--disp);font-weight:500;font-size:15px;display:flex;align-items:baseline;gap:10px}
+.phase .pn{font:600 12px var(--mono);color:var(--mute);min-width:1.6em}
 .phase .pc{font-size:12px;border-radius:999px;padding:3px 9px;background:var(--soft);color:var(--mute)}
 .phase .pc.p-done{background:var(--grn-bg);color:var(--grn)}
 .phase .pc.p-overdue{background:var(--red-bg);color:var(--red)}
@@ -165,6 +166,39 @@ a{color:var(--blu)}
   h2{font-size:18px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.toast,button{transition:none}}
+
+/* when: рекомендуемый / крайний */
+.wrow{display:grid;grid-template-columns:auto auto;column-gap:6px;align-items:baseline;line-height:1.3}
+.wrow+.wrow{margin-top:4px}
+.wrow .wl{grid-column:1/-1;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+.wrow .wl:empty{display:none}
+.wrow .date{font-size:13px;font-weight:500}
+.wd-dl .wl{color:var(--red)}.wd-dl .date{color:var(--red)}
+.ev.done .wd-dl .date,.ev.done .wd-dl .wl{color:var(--mute)}
+.p-late{background:var(--amb-bg);color:var(--amb)}
+.p-left{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.p-ph{background:transparent;color:var(--mute);border:1px dashed var(--line)}
+.d-late{background:var(--amb)}
+.dot.k-dl{box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--red)}
+.tl-n.rec{border-style:dashed}
+/* refs */
+.refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ref{font:500 11.5px var(--mono);color:var(--blu);background:var(--blu-bg);border-radius:6px;padding:3px 8px;text-decoration:none;white-space:nowrap}
+.ref:hover{text-decoration:underline}
+.cals{display:flex;flex-direction:column;gap:4px}
+/* clauses */
+.doc{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.doc:first-child{border-top:0;margin-top:0;padding-top:0}
+.doc>summary{color:var(--ink);font-family:var(--disp);font-weight:500;font-size:14.5px}
+.clause{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:10px 8px;border-radius:10px;scroll-margin-top:80px}
+.clause+.clause{border-top:1px dashed var(--line)}
+.clause .cn{font:600 12.5px var(--mono);color:var(--ink)}
+.clause .ct{font-size:14px}
+.clause .cu{font-size:12px;color:var(--mute);margin-top:4px}
+.clause.flash{animation:flash 2.2s var(--ease,ease-out)}
+@keyframes flash{0%,40%{background:color-mix(in srgb,var(--sig) 35%,transparent)}100%{background:transparent}}
+@media (max-width:700px){.clause{grid-template-columns:1fr;gap:2px}}
+@media (prefers-reduced-motion:reduce){.clause.flash{animation:none;background:color-mix(in srgb,var(--sig) 25%,transparent)}}
 </style>
 </head>
 <body>
@@ -179,7 +213,7 @@ a{color:var(--blu)}
       <label>Акт приёмки-передачи подписан
         <input type="date" id="in-akt"><span class="hint">Приёмка 20.11, ориентир акта 27.11. От неё: замечания УКС (3 мес.) и гарантия (5 лет)</span></label>
       <label>Подписание ипотеки в агентстве (БТИ)
-        <input type="date" id="in-notary"><span class="hint">Дату назначает банк. Ориентир — до 8–10 декабря</span></label>
+        <input type="date" id="in-notary"><span class="hint">Дату назначает банк. Рекомендуем до 08.12, крайний срок регистрации — 24.12</span></label>
       <label>Ипотека зарегистрирована
         <input type="date" id="in-ipreg"><span class="hint">От неё: полис +10 дней, прописка детей</span></label>
       <label>Начало страхового полиса
@@ -187,7 +221,9 @@ a{color:var(--blu)}
       <label>Жена прописана в квартире
         <input type="date" id="in-family"><span class="hint">Как поручитель она уведомляет банк за 3 рабочих дня</span></label>
     </div>
-    <p class="hint" style="margin:10px 0 0">Даты и отметки «сделано» хранятся только в этом браузере и на этом устройстве. <button id="reset" style="min-height:32px;padding:4px 10px;font-size:13px;margin-left:6px">Сбросить отметки</button></p>
+    <p class="hint" style="margin:12px 0 0">Отметки и даты сохраняются в этом браузере автоматически и не пропадают при обновлении сайта. Чтобы увидеть их на телефоне, перенесите кнопкой ниже.</p>
+    <div class="toolbar" style="margin-bottom:0"><button id="share">Перенести отметки на другое устройство</button><button id="reset">Сбросить отметки</button></div>
+    <input id="shareout" hidden readonly aria-label="Ссылка с отметками" style="width:100%;margin-top:8px;font:12px var(--mono);padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--soft);color:var(--ink)">
   </div>
 
   <h2>Чек-лист по этапам</h2>
@@ -203,7 +239,6 @@ a{color:var(--blu)}
       <button data-f="done" aria-pressed="false">Сделано</button>
     </div>
     <span class="sp"></span><button id="ics">Добавить в календарь телефона (.ics)</button>
-    <button id="icscopy">Скопировать .ics</button>
   </div>
   <div id="list"></div>
 
@@ -220,45 +255,15 @@ a{color:var(--blu)}
       <span><i class="dot d-soon"></i>≤ 7 дней</span>
       <span><i class="dot d-upcoming"></i>впереди</span>
       <span><i class="dot d-done"></i>сделано</span>
+      <span><i class="dot d-upcoming k-dl"></i>в кольце — крайний срок</span>
       <span style="color:var(--red)">красное число — выходной</span>
     </div>
     <div class="daypanel" id="daypanel"></div>
   </div>
 
-  <h2 id="dogovory">Ключевые пункты договоров</h2>
-  <div class="card det">
-    <details open><summary><b>Договор создания объекта долевого строительства (УКС)</b></summary>
-    <p><b>п. 7.</b> Окончательный расчёт — за 25 дней после ввода дома. Документы для регистрации УКС выдаёт в день обращения после полной оплаты. За подписанием акта обратиться не позднее 1 рабочего дня после получения свидетельства. Ключи и документы на оборудование передаются в день подписания акта. С этого дня расходы и риск случайной гибели — на дольщике.</p>
-    <p><b>п. 8.</b> Гарантия 5 лет с даты акта. Недостатки из акта или найденные за гарантийный срок УКС устраняет за свой счёт.</p>
-    <p><b>п. 17.4–17.6.</b> Обязанности дольщика: обратиться за актом, принять квартиру по акту, зарегистрировать право.</p>
-    <p><b>п. 19.10–19.11.</b> УКС передаёт документы и квартиру и устраняет замечания из акта за 3 месяца.</p>
-    <p><b>п. 27.</b> За отказ подписать акт — пеня 0,01% от внесённой суммы за день.</p>
-    <p><b>п. 40.</b> Об изменении паспорта, адреса регистрации, телефона — сообщить УКС за 15 рабочих дней.</p>
-    <p><b>п. 42.</b> Квартира принимается по акту с замечаниями или без. Замечания вносятся в перечень при подписании, срок устранения — с даты акта.</p>
-    <p><b>п. 43.</b> Переустройство, перепланировка, фасад, балкон — только по правилам. Штраф по КоАП ст. 22.9 — от 2 до 15 БВ.</p>
-    <p><b>п. 47–48.</b> При получении документов — копии платёжек. Техпаспорт и регистрация — за свой счёт. О регистрации права уведомить УКС.</p>
-    <p><b>Прил. 2 и перечень замечаний.</b> Акт подписывают дольщик и УКС (по доверенности, с печатью). Замечания устраняются за 3 месяца.</p>
-    </details>
-    <details><summary><b>Кредитный договор</b></summary>
-    <p><b>п. 1.1.</b> Ставка: СР + 4,25 первые 18 месяцев, потом СР + 6,25. Меняется вместе со ставкой рефинансирования.</p>
-    <p><b>п. 1.2.</b> Выдача кредита — до 02.09.2027.</p>
-    <p><b>п. 1.3.</b> Платёж ежемесячно до 2-го числа. Основной долг — с 02.10.2027 равными долями.</p>
-    <p><b>п. 1.5.</b> Обеспечение: поручительство супруги, залог прав, ипотека — договор ипотеки сдать в банк за 45 календарных дней от регистрации права.</p>
-    <p><b>п. 2.1.1.</b> Оригиналы свидетельства и техпаспорта — за 60 дней от ввода.</p>
-    <p><b>п. 2.1.2.</b> Полис — за 10 дней после регистрации ипотеки. Продлевать не позднее последнего дня действующего полиса.</p>
-    <p><b>п. 2.1.4.</b> При нарушении п. 2.1.1 или обеспечения банк вправе потребовать погасить кредит полностью.</p>
-    <p><b>п. 3.2.1.</b> Пеня 0,03% в день за просрочку платежа. <b>п. 3.2.4.</b> Штраф 0,5 БВ в день за нарушение п. 2.1.1 и 2.1.2, не больше 5% суммы кредита в год.</p>
-    </details>
-    <details><summary><b>Залог прав и предварительный договор ипотеки</b></summary>
-    <p><b>Залог прав, п. 13.8.</b> После окончания строительства получить свидетельство и вовремя оформить ипотеку. <b>п. 14.</b> Штраф 1% стоимости заложенных прав за нарушение.</p>
-    <p><b>Предварительный договор, п. 8.2, 9.1–9.2.</b> Не продавать, не сдавать в наём, не обременять без письменного согласия банка.</p>
-    <p><b>п. 9.8.</b> Пускать банк на осмотр. <b>п. 9.9.</b> При утрате или повреждении — восстановить или заменить за 10 рабочих дней либо досрочно погасить кредит.</p>
-    <p><b>п. 9.10.</b> Копия свидетельства — за 60 дней от ввода. <b>п. 9.11.</b> Договор ипотеки — за 45 дней от регистрации права.</p>
-    </details>
-    <details><summary><b>Договор поручительства (супруга)</b></summary>
-    <p><b>п. 5.</b> Письменно уведомить банк за 3 рабочих дня об изменении места жительства, регистрации, работы, ФИО, документа.</p>
-    </details>
-  </div>
+  <h2 id="dogovory">Пункты договоров</h2>
+  <p class="sub" style="margin-bottom:12px">Пересказ без персональных данных. Кнопки под пунктами чек-листа ведут сюда.</p>
+  <div class="card" id="clauses"></div>
 
   <h2>Где ещё регистрироваться и кого уведомить</h2>
   <div class="card det">
@@ -322,294 +327,8 @@ a{color:var(--blu)}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
-// Этапы и пункты чек-листа. d — дата (YYYY-MM-DD) или функция от состояния; без d — пункт без срока.
-window.PHASES=[
- {id:"p1",t:"1. Договор и финансирование"},
- {id:"p2",t:"2. Строительство и ввод дома"},
- {id:"p3",t:"3. Регистрация права собственности"},
- {id:"p4",t:"4. Приёмка квартиры у УКС"},
- {id:"p5",t:"5. Банк: документы, ипотека, страховка"},
- {id:"p6",t:"6. Коммуналка и лицевые счета"},
- {id:"p7",t:"7. Прописка семьи"},
- {id:"p8",t:"8. Ремонт"},
- {id:"p9",t:"9. Кредит: регулярные обязательства"},
- {id:"p10",t:"10. Финал: погашение и снятие обременения"}
-];
-window.DEFAULT_DONE={c1:1,c1b:1,c1c:1,c2:1,c2b:1,c3:1,c3b:1,c4:1,c4b:1,c5:1,c5b:1,c6:1,c7:1,c7b:1,c9:1};
-window.buildItems=function(S,H){
- const {D,addD,addM,addWork,prevWork,fmt}=H, I=S.inp, X=[];
- const add=(ph,o)=>{o.ph=ph;X.push(o)};
- const REG=D("2026-11-10"), IPF=addD(REG,45), IPD=prevWork(IPF);
- const ipReg=I.ipreg?D(I.ipreg):null, akt=I.akt?D(I.akt):null;
-
- // 1
- add("p1",{id:"c1",d:D("2026-08-24"),t:"Договор создания объекта долевого строительства с УКС"});
- add("p1",{id:"c1b",d:D("2026-08-26"),t:"Договор зарегистрирован в горисполкоме, экземпляр получен лично",basis:"Договор строительства п. 19.1, 30: получить в течение 3 рабочих дней"});
- add("p1",{id:"c1c",t:"Первый платёж застройщику (10 рабочих дней с регистрации договора)",basis:"Договор строительства п. 33"});
- add("p1",{id:"c2",d:D("2026-09-02"),t:"Кредитный договор, поручительство супруги, договор залога прав, предварительный договор ипотеки"});
- add("p1",{id:"c2b",t:"Кредит перечислен застройщику",basis:"Кредитный договор п. 1.2: выдача до 02.09.2027"});
- // 2
- add("p2",{id:"c3",t:"Оплата по ежемесячным справкам застройщика (8–10 число)",basis:"Договор строительства п. 34"});
- add("p2",{id:"c3b",d:D("2026-09-30"),t:"Дом введён в эксплуатацию",note:"От этой даты 60 дней на оригиналы в банк"});
- add("p2",{id:"c4",d:D("2026-10-25"),t:"Окончательный расчёт стоимости от УКС (25 дней от ввода)",basis:"Договор строительства п. 7, 19.4",note:"Допсоглашение №1 от 23.10.2026, цена не изменилась"});
- add("p2",{id:"c4b",t:"Окончательный расчёт оплачен (если была доплата — 10 рабочих дней)",basis:"Договор строительства п. 41, 26"});
- // 3
- add("p3",{id:"c5",d:D("2026-10-30"),t:"Справка УКС для госрегистрации получена"});
- add("p3",{id:"c5b",d:D("2026-10-31"),t:"Подано заявление в агентство по госрегистрации",basis:"Договор п. 17.6: в течение 3 месяцев"});
- add("p3",{id:"c6",d:REG,t:"Право собственности зарегистрировано (общая совместная с супругой)",crit:1,note:"От этой даты: 45 дней на ипотеку; обязанность платить ЖКУ (Жилищный кодекс, ст. 29)"});
- add("p3",{id:"c7",d:D("2026-11-13"),t:"Получены свидетельство и техпаспорт"});
- add("p3",{id:"c7b",d:D("2026-11-13"),t:"Копия свидетельства отдана в УКС (уведомление о регистрации права)",basis:"Договор строительства п. 47–48",note:"Сделано 13.11, в день получения свидетельства. Этим же днём выполнено обращение к УКС по п. 7 и 17.4; приглашение на приёмку пришло на 20.11"});
- // 4
- add("p4",{id:"k0",d:D("2026-11-20"),t:"Приёмка в УКС по приглашению (СМС)",crit:1,
-   note:"По п. 7 ключи и документы на оборудование выдаются в день подписания акта. Уточнить: ключи дают «на осмотр» без акта или только вместе с актом? Во втором случае осмотреть до подписи и записать замечания в перечень (или «осмотр не завершён, дополнительный перечень до 27.11»). Показания счётчиков — в акт или на фото с датой. Акт подписывает УКС (жилищный отдел, по доверенности, с печатью), не прораб.",
-   basis:"Договор строительства п. 7, 17.4, 17.5, 42"});
- add("p4",{id:"k1",d:D("2026-11-22"),t:"Осмотр квартиры с приёмщиком",note:"Окна, двери, стяжка и стены, стояки и сантехника, радиаторы, электрощиток и счётчики, вентиляция, лоджия. Фото и видео с датой."});
- add("p4",{id:"k2",d:akt||D("2026-11-27"),est:!akt,t:akt?"Акт приёмки-передачи подписан":"Подписать акт приёмки-передачи с перечнем замечаний (в УКС, 2 экземпляра)",crit:1,
-   basis:"Договор строительства п. 42, приложение 2",pen:"За отказ от подписания — пеня 0,01% от внесённой суммы в день (п. 27). Подписать с замечаниями — это не отказ.",
-   note:"С этой даты риск случайной гибели и расходы на квартиру на вас (п. 7). Получить: ключи, паспорта счётчиков воды и тепла. Перечень замечаний, если сдаётся отдельно, — в УКС с входящим номером."});
- add("p4",{id:"k3",d:addM(akt||D("2026-11-27"),3),est:!akt,t:"УКС устраняет замечания из перечня (3 месяца от акта)",basis:"Договор п. 19.11, приложение к акту",note:"Не устранили — письменная претензия с входящим номером"});
- add("p4",{id:"k4",d:addM(akt||D("2026-11-27"),60),est:!akt,t:"Конец гарантийного срока (5 лет от акта)",basis:"Договор п. 8"});
- // 5
- add("p5",{id:"c9",d:addD(D("2026-09-30"),60),t:"Оригиналы свидетельства и техпаспорта в банк (60 дней от ввода)",crit:1,basis:"Кредитный договор п. 2.1.1; предварительный договор ипотеки п. 9.10",pen:"0,5 БВ в день; право банка на досрочное погашение",note:"Сдано 17.11.2026"});
- add("p5",{id:"a1",d:D("2026-11-20"),t:"Позвонить в отдел розничного бизнеса: когда банк подготовит договор ипотеки и назначит выезд в БТИ",note:"Спросить: подойдёт ли справка от УКС? Нужен ли осмотр для акта оценки? Сколько стоит регистрация и кто платит? Засчитают ли полис, оформленный до регистрации ипотеки?"});
- add("p5",{id:"a2",d:D("2026-11-27"),t:"Справка о зарегистрированных в квартире (от УКС, пока дом не передан РСЦ)",crit:1,basis:"Памятка банка, шаг 2; форма справки — постановление Минжилкомхоза №58",note:"Действует 1 месяц. Если РСЦ отказывает — взять письменный ответ."});
- add("p5",{id:"a3",t:"Выписка из ЕГРНиЗК не нужна: договор оформляется в агентстве, а не у нотариуса",note:"По памятке выписка нужна только для нотариального удостоверения. На всякий случай уточнить у банка"});
- add("p5",{id:"a4",d:I.notary?D(I.notary):D("2026-12-08"),est:!I.notary,t:"Подписать и зарегистрировать ипотеку в агентстве (БТИ) с представителем банка, вместе с супругой-сособственником",crit:1,basis:"Памятка банка, шаг 2, п. 3–5",note:"Договор готовит банк. Взять оригиналы: справку о зарегистрированных, кредитный договор и договор строительства с допсоглашениями, свидетельство, паспорта обоих, деньги на регистрацию (по памятке 350–400 руб. вместе с удостоверением; без нотариуса может выйти меньше)."});
- add("p5",{id:"a5",d:D("2026-12-10"),t:"Контроль: если справки или договора от банка всё ещё нет — письменное заявление в банк",note:"С входящим номером: что вы готовы, а что задерживается (ответы РСЦ и УКС). Попросить назначить дату или продлить срок"});
- add("p5",{id:"a6",d:ipReg||IPD,t:ipReg?"Ипотека зарегистрирована":"КРАЙНИЙ СРОК: ипотека зарегистрирована",crit:1,
-   basis:"Кредитный договор п. 1.5, 2.1.3; предварительный договор п. 9.11. 45-й день — "+fmt(IPF)+" (праздник), поэтому ориентир "+fmt(IPD),
-   pen:"Банк вправе потребовать погасить весь кредит (п. 2.1.4); штраф 1% по договору залога прав"});
- add("p5",{id:"a7",d:addWork(ipReg||IPD,5),est:!ipReg,t:"Договор ипотеки и свидетельство об обременении — в банк (если не забрал представитель банка)",basis:"Памятка банка, шаг 2, п. 6"});
- add("p5",{id:"a8",d:addD(ipReg||IPD,10),est:!ipReg,t:"Страховой полис — в банк (10 дней после регистрации ипотеки)",crit:1,basis:"Кредитный договор п. 2.1.2; памятка, шаг 3",pen:"0,5 БВ в день",
-   note:"Страхователь вы, выгодоприобретатель Приорбанк. Срок 1 год, BYN, сумма не меньше остатка основного долга. Можно на doc@priorbank.by, тема «Недвижимость: страхование», со своей почты, с М-кодом."});
- add("p5",{id:"a8b",t:"(По желанию) застраховать квартиру сразу после акта и ответственность перед соседями на время ремонта",note:"Риск переходит на вас с даты акта, а ипотечный полис нужен только после регистрации ипотеки"});
- // 6
- add("p6",{id:"u0",t:"Плата за ЖКУ начисляется с даты регистрации права (с 10.11.2026)",basis:"Жилищный кодекс, ст. 29",note:"Узнать в УКС, кто эксплуатирует дом до передачи городу и куда платить"});
- add("p6",{id:"u1",t:"Лицевой счёт ЖКУ: открыть или узнать номер (РСЦ / ЖРЭУ после передачи дома)"});
- add("p6",{id:"u2",t:"Договор на оказание основных ЖКУ / на управление общим имуществом",note:"Отказ от договора не освобождает от оплаты"});
- add("p6",{id:"u3",t:"Энергосбыт: договор электроснабжения и лицевой счёт",note:"Взять свидетельство, паспорт, номер и показания электросчётчика из этажного щитка"});
- add("p6",{id:"u4",t:"Счётчики воды: ввести в эксплуатацию / опломбировать, сообщить номера и начальные показания",note:"Уточнить, кто пломбирует в вашем доме: ЖЭС или водоканал"});
- add("p6",{id:"u5",t:"Тепловой счётчик: номер, начальные показания, порядок передачи показаний"});
- add("p6",{id:"u6",t:"Подключить оплату через ЕРИП / Prior Online, настроить автоплатежи"});
- add("p6",{id:"u7",t:"Ключи от почтового ящика, домофон, интернет"});
- // 7
- add("p7",{id:"r1",d:I.family?D(I.family):null,t:I.family?"Супруга прописана":"Прописать супругу (можно до ипотеки, но справку брать после)",note:"Если прописать до нотариуса, справка должна это отражать"});
- add("p7",{id:"r2",d:ipReg||IPD,est:!ipReg,t:"Прописать детей — только после регистрации ипотеки",note:"Раньше — понадобится разрешение отдела образования"});
- if(I.family){const f=D(I.family);
-   add("p7",{id:"r3",d:addWork(f,3),t:"Супруга-поручитель письменно уведомляет банк о смене регистрации",crit:1,basis:"Договор поручительства п. 5: 3 рабочих дня"});
-   add("p7",{id:"r4",d:addWork(f,15),t:"Уведомить УКС о смене адреса регистрации (если меняли свою)",basis:"Договор строительства п. 40: 15 рабочих дней"});
- } else add("p7",{id:"r3",t:"После прописки: супруга-поручитель уведомляет банк в течение 3 рабочих дней",crit:1,basis:"Договор поручительства п. 5"});
- add("p7",{id:"r5",t:"Школа, сад, поликлиника — по новому месту жительства"});
- add("p7",{id:"r6",t:"Если состоите на воинском учёте: сообщить в военкомат о смене места жительства в недельный срок",basis:"Закон «О воинской обязанности и воинской службе», обязанности военнообязанных"});
- add("p7",{id:"r7",t:"Сообщить новый адрес на работе (кадры/бухгалтерия)"});
- add("p7",{id:"r8",t:"Если состоите на учёте нуждающихся в улучшении жилищных условий — сообщить о новой квартире",basis:"Договор строительства п. 40"});
- // 8
- add("p8",{id:"q1",t:"Если меняете стены, мокрые зоны или проёмы — согласовать переустройство/перепланировку",basis:"Постановление Совмина №164 от 03.04.2026; договор п. 43"});
- add("p8",{id:"q2",t:"Не трогать фасад, лоджию и остекление без согласования",pen:"Штраф от 2 до 15 БВ (КоАП ст. 22.9, договор п. 43)"});
- add("p8",{id:"q4",t:"Не сдавать квартиру в наём и не обременять без письменного согласия банка",basis:"Предварительный договор ипотеки п. 8.2, 9.1–9.2"});
- add("p8",{id:"q3",t:"Ремонт не должен уменьшать стоимость предмета залога",basis:"Договор залога: не ухудшать предмет залога"});
- // 9
- add("p9",{id:"m1",d:D("2027-09-02"),t:"Последний день выдачи кредита (кредитная линия)",basis:"Кредитный договор п. 1.2"});
- add("p9",{id:"m2",d:D("2027-10-02"),t:"Начало погашения основного долга (равными частями)",basis:"Кредитный договор п. 1.3"});
- add("p9",{id:"m3",d:D("2028-03-02"),t:"Ставка меняется: СР + 4,25 → СР + 6,25",basis:"Кредитный договор п. 1.1"});
- const pol=I.policy?D(I.policy):null;
- if(pol){for(let y=1;y<=3;y++)add("p9",{id:"ins"+y,d:addD(addM(pol,12*y),-1),t:"Продлить страховой полис и сдать новый в банк",crit:1,basis:"Кредитный договор п. 2.1.2",pen:"0,5 БВ в день"});}
- else add("p9",{id:"ins0",d:addM(addD(ipReg||IPD,10),12),est:1,t:"Ежегодное продление страховки (укажите дату начала полиса)",crit:1,basis:"Кредитный договор п. 2.1.2"});
- add("p9",{id:"m4",t:"Налог на недвижимость: одна квартира в многоквартирном доме освобождена. Если в собственности есть другое жильё — проверять извещение"});
- add("p9",{id:"m5",t:"При смене паспорта, адреса, телефона — уведомить банк"});
- // 10
- add("p10",{id:"z1",t:"Досрочное погашение — частичное и полное, без ограничений",basis:"Информация об условиях кредитования, п. 6"});
- add("p10",{id:"z2",d:D("2046-09-02"),t:"Окончание кредита (крайний срок)"});
- add("p10",{id:"z3",t:"Взять в банке справку о полном погашении"});
- add("p10",{id:"z4",t:"Прекратить ипотеку в агентстве по госрегистрации (снять обременение)",basis:"Закон №133-З; Закон №345-З «Об ипотеке»"});
- add("p10",{id:"z5",t:"Полис больше не обязателен для банка: переоформить без выгодоприобретателя или закрыть"});
- // monthly payments (calendar only)
- return X;
-};
-
-</script>
-<script>
-(function(){
-"use strict";
-const HOL=new Set(["2026-01-01","2026-01-02","2026-01-07","2026-03-08","2026-04-21","2026-05-01","2026-05-09","2026-07-03","2026-11-07","2026-12-25",
-"2027-01-01","2027-01-02","2027-01-07","2027-03-08","2027-05-01","2027-05-09","2027-05-11","2027-07-03","2027-11-07","2027-12-25",
-"2028-01-01","2028-01-02","2028-01-07","2028-03-08","2028-04-25","2028-05-01","2028-05-09","2028-07-03","2028-11-07","2028-12-25"]);
-const D=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d,12)};
-const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const fmt=d=>String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();
-const WD=["вс","пн","вт","ср","чт","пт","сб"];
-const MON=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
-const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
-const addM=(d,n)=>{const x=new Date(d);x.setMonth(x.getMonth()+n);return x};
-const isOff=d=>d.getDay()===0||d.getDay()===6||HOL.has(iso(d));
-const prevWork=d=>{let x=new Date(d);while(isOff(x))x=addD(x,-1);return x};
-const addWork=(d,n)=>{let x=new Date(d),k=0;while(k<n){x=addD(x,1);if(!isOff(x))k++}return x};
-const now=new Date();const TODAY=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12);
-const diff=d=>Math.round((d-TODAY)/864e5);
-const H={D,addD,addM,addWork,prevWork,fmt};
-
-const KEY="kv-sroki-v2";
-let S={inp:{akt:"",notary:"",ipreg:"",policy:"",family:""},done:Object.assign({},window.DEFAULT_DONE)};
-try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);S.inp=Object.assign(S.inp,p.inp||{});S.done=Object.assign({},window.DEFAULT_DONE,p.done||{})}}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-
-function status(e){
-  if(S.done[e.id])return"done";
-  if(!e.d)return"nodate";
-  const n=diff(e.d);
-  if(n<0)return"overdue";
-  if(n<=7)return"soon";
-  return"upcoming";
-}
-const ST={overdue:"просрочено",soon:"скоро",done:"сделано",upcoming:"впереди",nodate:"без срока"};
-function rel(e){if(!e.d)return"";const n=diff(e.d);if(n===0)return" · сегодня";if(n>0)return" · через "+n+" дн.";return" · прошло "+(-n)+" дн."}
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function gcal(e){
-  const a=iso(e.d).replace(/-/g,""),b=iso(addD(e.d,1)).replace(/-/g,"");
-  const det=[e.basis,e.pen&&("Санкция: "+e.pen),e.note].filter(Boolean).join("\n");
-  return"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(e.t)+"&dates="+a+"/"+b+"&details="+encodeURIComponent(det);
-}
-function evHTML(e,showPhase){
-  const det=[e.basis&&`<p><span class="k">Основание:</span> ${esc(e.basis)}</p>`,e.pen&&`<p><span class="k">Санкция:</span> ${esc(e.pen)}</p>`,e.note&&`<p>${esc(e.note)}</p>`,e.d&&`<p><a class="gcal" href="${gcal(e)}" target="_blank" rel="noopener">+ в Google Календарь</a></p>`,e.basis&&/договор/i.test(e.basis)&&`<p><a class="gcal" href="#dogovory">→ пункты договоров</a></p>`].filter(Boolean).join("");
-  const ph=showPhase?`<span class="pill p-est">${esc(PH[e.ph].t.replace(/^\d+\.\s*/,""))}</span>`:"";
-  return `<div class="card ev ${e.st}">
-    <input type="checkbox" data-id="${e.id}" ${S.done[e.id]?"checked":""} aria-label="Сделано: ${esc(e.t)}">
-    <div class="when">${e.d?`<div class="date">${fmt(e.d)}</div><div class="wd">${WD[e.d.getDay()]}${isOff(e.d)?" · выходной":""}</div>`:`<div class="wd">без срока</div>`}</div>
-    <div class="body"><div class="t">${esc(e.t)}</div>
-      <div class="meta"><span class="pill p-${e.st}">${ST[e.st]}${rel(e)}</span>${e.crit?'<span class="pill p-crit">санкции банка</span>':""}${e.est?'<span class="pill p-est">дата ориентировочная</span>':""}${ph}</div>
-      ${det?`<details><summary>Подробнее</summary><div class="det">${det}</div></details>`:""}
-    </div></div>`;
-}
-let PH={},IT=[],PAY=[],VIEW="phases",FILTER="active",VM=null;
-window.PHASES.forEach(p=>PH[p.id]=p);
-function build(){
-  IT=window.buildItems(S,H);
-  IT.forEach(e=>e.st=status(e));
-  PAY=[];let p=new Date(TODAY.getFullYear(),TODAY.getMonth(),2,12);if(p<TODAY)p=addM(p,1);
-  for(let i=0;i<36;i++){const d=addM(p,i);const e={id:"pay"+iso(d),d,ph:"p9",pay:1,t:"Платёж по кредиту (до 2-го числа)",basis:"Кредитный договор п. 1.3",pen:"0,03% в день"};e.st=status(e);PAY.push(e)}
-}
-const byDate=(a,b)=>(a.d?a.d:new Date(9e15))-(b.d?b.d:new Date(9e15));
-function renderPhases(){
-  let h="";
-  window.PHASES.forEach(p=>{
-    const its=IT.filter(e=>e.ph===p.id).sort(byDate);
-    const dn=its.filter(e=>e.st==="done").length, tot=its.length;
-    const od=its.some(e=>e.st==="overdue"), allDone=dn===tot;
-    const open=!allDone;
-    h+=`<details class="phase card" id="ph-${p.id}" ${open?"open":""}><summary><span class="pt">${esc(p.t)}</span><span class="pc ${od?"p-overdue":allDone?"p-done":""}">${dn} / ${tot}</span>
-      <span class="bar"><i style="width:${Math.round(dn/tot*100)}%"></i></span></summary><div class="list">${its.map(e=>evHTML(e,false)).join("")}</div></details>`;
-  });
-  return h;
-}
-function renderTimeline(){
-  let ev=IT.filter(e=>e.d).concat(PAY.filter(e=>diff(e.d)<=40));
-  ev=ev.filter(e=>FILTER==="all"?true:FILTER==="done"?e.st==="done":e.st!=="done"&&diff(e.d)<400).sort(byDate);
-  const g={overdue:[],soon:[],upcoming:[],done:[]};ev.forEach(e=>g[e.st]&&g[e.st].push(e));
-  const T={overdue:"Просрочено",soon:"Ближайшие 7 дней",upcoming:"Впереди",done:"Сделано"};
-  let h="";["overdue","soon","upcoming","done"].forEach(k=>{if(g[k].length)h+=`<div class="groupt">${T[k]} · ${g[k].length}</div><div class="list">${g[k].map(e=>evHTML(e,true)).join("")}</div>`});
-  return h||'<div class="card">Пусто. Переключите фильтр.</div>';
-}
-function renderMain(){
-  document.getElementById("filters").style.display=VIEW==="timeline"?"inline-flex":"none";
-  document.getElementById("list").innerHTML=VIEW==="phases"?renderPhases():renderTimeline();
-  const all=IT.length,dn=IT.filter(e=>e.st==="done").length;
-  const seg=window.PHASES.map(p=>{const its=IT.filter(e=>e.ph===p.id),d2=its.filter(e=>e.st==="done").length,od=its.some(e=>e.st==="overdue");
-    return `<a href="#ph-${p.id}" class="${d2===its.length?"full":""} ${od?"bad":""}" title="${esc(p.t)}: ${d2} из ${its.length}"><i style="width:${Math.round(d2/its.length*100)}%"></i></a>`}).join("");
-  document.getElementById("total").innerHTML=`<div class="totline"><span>Сделано <b>${dn}</b> из ${all} пунктов</span><span class="hint">10 этапов, от договора до закрытия кредита</span></div><div class="prog">${seg}</div>`;
-}
-function plural(n,a,b,c){n=Math.abs(n)%100;const m=n%10;if(n>10&&n<20)return c;if(m>1&&m<5)return b;if(m===1)return a;return c}
-function renderHero(){
-  const h=document.getElementById("hero");
-  const main=IT.find(e=>e.id==="a6");
-  const crit=IT.filter(e=>e.crit&&e.d&&e.st!=="done"&&diff(e.d)>=0).sort(byDate);
-  const goal=(main&&main.st!=="done")?main:crit[0];
-  let head;
-  if(goal){const n=diff(goal.d);
-    head=goal.id==="a6"?`До регистрации ипотеки <span class="n">${n} ${plural(n,"день","дня","дней")}</span>`:`${esc(goal.t)}: <span class="n">${n} ${plural(n,"день","дня","дней")}</span>`;
-  } else head="Банковские сроки закрыты";
-  const sub=goal&&goal.id==="a6"?`Крайний срок — ${fmt(goal.d)}, ${WD[goal.d.getDay()]}. После него банк вправе потребовать досрочного погашения кредита.`:"";
-  const next=IT.filter(e=>e.d&&e.st!=="done"&&diff(e.d)>=0).sort(byDate).slice(0,3);
-  const nx=next.map(e=>`<div class="nx ${e.crit?"crit":""} ${e.st}"><span class="when">${fmt(e.d)} · ${WD[e.d.getDay()]} · ${rel(e).replace(" · ","")}</span><span class="t">${esc(e.t)}</span></div>`).join("");
-  // timeline
-  const T0=D("2026-08-20"), T1=addD(D("2026-12-24"),18);
-  const span=T1-T0, pos=d=>Math.max(0,Math.min(100,(d-T0)/span*100));
-  const keyIds=["c1","c2","c3b","c6","k0","k2","a4","a6","a8"];
-  const short={c1:"Договор с УКС",c2:"Кредит",c3b:"Ввод дома",c6:"Право собств.",c9:"Оригиналы в банк",k0:"Приёмка",k2:"Акт",a4:"Ипотека в БТИ",a6:"Срок банка",a8:"Полис"};
-  const ks=keyIds.map(id=>IT.find(e=>e.id===id)).filter(e=>e&&e.d&&e.d>=T0&&e.d<=T1).sort(byDate);
-  let t=`<div class="tl-axis"></div><div class="tl-past" style="width:${pos(TODAY)}%"></div>`;
-  ["2026-09-01","2026-10-01","2026-11-01","2026-12-01","2027-01-01"].forEach(m=>{const d=D(m);if(d<=T1)t+=`<span class="tl-tick" style="left:${pos(d)}%">${MON[d.getMonth()].slice(0,3).toLowerCase()}</span>`});
-  ks.forEach((e,i)=>{if(e.id==="a6")return;const x=pos(e.d);
-    const al=x<6?"l":x>94?"r":"";t+=`<i class="tl-n ${e.st==="done"?"done":""} ${e.crit?"crit":""}" style="left:${x}%" title="${esc(e.t)}"></i><span class="tl-lab ${i%2?"dn":"up"} ${al}" style="left:${x}%"><b>${fmt(e.d).slice(0,5)}</b>${short[e.id]}</span>`});
-  if(main&&main.d<=T1)t+=`<span class="tl-flag" style="left:${pos(main.d)}%"><span>${fmt(main.d).slice(0,5)} срок банка</span></span>`;
-  t+=`<span class="tl-today" style="left:${pos(TODAY)}%"><span>сегодня</span></span>`;
-  h.innerHTML=`<h1>${head}</h1><p class="sub">${sub}</p><div class="tl" aria-label="Путь от договора до ипотеки"><div class="tl-in">${t}</div></div><div class="next">${nx}</div>`;
-  const tl=h.querySelector(".tl"),tin=h.querySelector(".tl-in");if(tl.scrollWidth>tl.clientWidth)tl.scrollLeft=tin.offsetWidth*pos(TODAY)/100-tl.clientWidth*0.55;
-  const od=IT.filter(e=>e.st==="overdue");const a=document.getElementById("alert");
-  if(od.length){a.style.display="block";a.innerHTML="<b>Просрочено: "+od.length+"</b> — "+od.map(e=>esc(e.t)+" ("+fmt(e.d)+")").join("; ")+". Если уже сделано, отметьте пункт.";}else a.style.display="none";
-}
-function renderCal(){
-  if(!VM)VM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1,12);
-  document.getElementById("mlabel").textContent=MON[VM.getMonth()]+" "+VM.getFullYear();
-  const by={};IT.filter(e=>e.d).concat(PAY).forEach(e=>{(by[iso(e.d)]=by[iso(e.d)]||[]).push(e)});
-  let start=addD(VM,-((VM.getDay()+6)%7));
-  let h=["пн","вт","ср","чт","пт","сб","вс"].map(x=>`<div class="dow">${x}</div>`).join("");
-  for(let i=0;i<42;i++){const d=addD(start,i),k=iso(d),es=by[k]||[];
-    const cls=["day",d.getMonth()!==VM.getMonth()?"out":"",k===iso(TODAY)?"today":"",isOff(d)?"hol":""].join(" ");
-    h+=`<button class="${cls}" data-day="${k}" aria-label="${fmt(d)}${es.length?", пунктов: "+es.length:""}"><span class="n">${d.getDate()}</span><span class="dots">${es.map(e=>`<i class="dot d-${e.st}"></i>`).join("")}</span></button>`;}
-  document.getElementById("cal").innerHTML=h;
-}
-function showDay(k){
-  const es=IT.filter(e=>e.d&&iso(e.d)===k).concat(PAY.filter(e=>iso(e.d)===k));const p=document.getElementById("daypanel");
-  p.style.display="block";p.dataset.k=k;
-  p.innerHTML=`<div class="groupt">${fmt(D(k))}${isOff(D(k))?" · выходной":""}</div>`+(es.length?`<div class="list">${es.map(e=>evHTML(e,true)).join("")}</div>`:'<div class="hint">Пунктов нет.</div>');
-}
-function renderAll(){build();renderHero();renderMain();renderCal();const p=document.getElementById("daypanel");if(p.style.display==="block"&&p.dataset.k)showDay(p.dataset.k)}
-
-function ics(){
-  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//kv-sroki//RU","CALSCALE:GREGORIAN","X-WR-CALNAME:Квартира — сроки"];
-  const stamp=new Date().toISOString().replace(/[-:]/g,"").split(".")[0]+"Z";
-  const f=s=>s.replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
-  IT.filter(e=>e.d&&e.st!=="done"&&diff(e.d)>=0).forEach(e=>{
-    const desc=[e.basis,e.pen&&("Санкция: "+e.pen),e.note].filter(Boolean).join("\n");
-    L.push("BEGIN:VEVENT","UID:"+e.id+"-"+iso(e.d)+"@kv-sroki","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+iso(e.d).replace(/-/g,""),"DTEND;VALUE=DATE:"+iso(addD(e.d,1)).replace(/-/g,""),
-      "SUMMARY:"+f((e.crit?"⚠ ":"")+e.t),"DESCRIPTION:"+f(desc));
-    if(e.crit)L.push("BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+f(e.t),"TRIGGER:-P7D","END:VALARM");
-    L.push("BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+f(e.t),"TRIGGER:-P1D","END:VALARM","END:VEVENT");
-  });
-  L.push("BEGIN:VEVENT","UID:monthly-pay@kv-sroki","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:20261202","DTEND;VALUE=DATE:20261203","RRULE:FREQ=MONTHLY;BYMONTHDAY=2;UNTIL=20460902",
-    "SUMMARY:Платёж по кредиту (до 2-го числа)","BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Платёж по кредиту","TRIGGER:-P3D","END:VALARM","END:VEVENT","END:VCALENDAR");
-  return L.join("\r\n");
-}
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2400)}
-
-document.getElementById("today").textContent=fmt(TODAY)+" · "+WD[TODAY.getDay()];
-const map={akt:"in-akt",notary:"in-notary",ipreg:"in-ipreg",policy:"in-policy",family:"in-family"};
-const auto={akt:["k2"],ipreg:["a6"],family:["r1"]};
-Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);el.value=S.inp[k]||"";
-  el.addEventListener("change",()=>{S.inp[k]=el.value;(auto[k]||[]).forEach(x=>{if(el.value)S.done[x]=1});
-    if(k==="notary"&&el.value&&D(el.value)<=TODAY)S.done.a4=1;save();renderAll();});});
-document.addEventListener("change",ev=>{const c=ev.target.closest('input[type=checkbox][data-id]');if(!c)return;
-  if(c.checked)S.done[c.dataset.id]=1;else delete S.done[c.dataset.id];save();renderAll();});
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{VIEW=b.dataset.view;
-  document.querySelectorAll("[data-view]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderMain();}));
-document.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{FILTER=b.dataset.f;
-  document.querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderMain();}));
-document.getElementById("prev").addEventListener("click",()=>{VM=addM(VM,-1);renderCal()});
-document.getElementById("next").addEventListener("click",()=>{VM=addM(VM,1);renderCal()});
-document.getElementById("cal").addEventListener("click",ev=>{const b=ev.target.closest("[data-day]");if(b)showDay(b.dataset.day)});
-document.getElementById("ics").addEventListener("click",()=>{
-  try{const blob=new Blob([ics()],{type:"text/calendar;charset=utf-8"});const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);a.download="kvartira-sroki.ics";document.body.appendChild(a);a.click();a.remove();toast("Файл .ics скачан — откройте его, чтобы добавить сроки в календарь");}
-  catch(e){toast("Скачивание недоступно — используйте «Скопировать .ics»")}});
-document.getElementById("icscopy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(ics());toast("Скопировано")}catch(e){toast("Не удалось скопировать")}});
-document.getElementById("reset").addEventListener("click",()=>{const b=document.getElementById("reset");
-  if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Точно сбросить отметки и даты?";setTimeout(()=>{b.dataset.c="";b.textContent="Сбросить отметки"},4000);return}
-  S={inp:{akt:"",notary:"",ipreg:"",policy:"",family:""},done:Object.assign({},window.DEFAULT_DONE)};save();Object.values(map).forEach(id=>document.getElementById(id).value="");
-  b.dataset.c="";b.textContent="Сбросить отметки";renderAll();toast("Сброшено")});
-renderAll();
-})();
-
-</script>
+<script src="clauses.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
