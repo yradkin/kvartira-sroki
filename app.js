@@ -214,8 +214,10 @@ function toast(m){const t=document.getElementById("toast");t.textContent=m;t.cla
 document.getElementById("today").textContent=fmt(TODAY)+" · "+WD[TODAY.getDay()];
 const map={akt:"in-akt",notary:"in-notary",ipreg:"in-ipreg",policy:"in-policy",family:"in-family"};
 const auto={akt:["k2"],ipreg:["a6","a4"],family:["r1"]};
-Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);el.value=S.inp[k]||"";
-  el.addEventListener("change",()=>{S.inp[k]=el.value;(auto[k]||[]).forEach(x=>{if(el.value)S.done[x]=1});save();renderAll();toast("Сохранено")});});
+const markHas=el=>{const w=el.closest(".dateinp");if(w)w.classList.toggle("has",!!el.value)};
+Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);el.value=S.inp[k]||"";markHas(el);
+  el.addEventListener("input",()=>markHas(el));
+  el.addEventListener("change",()=>{markHas(el);S.inp[k]=el.value;(auto[k]||[]).forEach(x=>{if(el.value)S.done[x]=1});save();renderAll();toast("Сохранено")});});
 document.addEventListener("change",ev=>{const c=ev.target.closest('input[type=checkbox][data-id]');if(!c)return;
   if(c.checked)S.done[c.dataset.id]=1;else delete S.done[c.dataset.id];save();renderAll();});
 document.addEventListener("click",ev=>{const a=ev.target.closest("a.ref");if(!a)return;ev.preventDefault();history.replaceState(null,"","#"+a.getAttribute("href").slice(1));openRef(a.getAttribute("href"))});
@@ -238,7 +240,7 @@ document.getElementById("share").addEventListener("click",async()=>{
   catch(e){prompt?0:0;document.getElementById("shareout").value=url;document.getElementById("shareout").hidden=false;toast("Скопируйте ссылку из поля")}});
 document.getElementById("reset").addEventListener("click",()=>{const b=document.getElementById("reset");
   if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Точно сбросить отметки и даты?";setTimeout(()=>{b.dataset.c="";b.textContent="Сбросить отметки"},4000);return}
-  S=blank();save();Object.values(map).forEach(id=>document.getElementById(id).value="");
+  S=blank();save();Object.values(map).forEach(id=>{const el=document.getElementById(id);el.value="";markHas(el)});
   b.dataset.c="";b.textContent="Сбросить отметки";renderAll();toast("Сброшено")});
 renderAll();
 if(location.hash.startsWith("#c-"))setTimeout(()=>openRef(location.hash),100);
