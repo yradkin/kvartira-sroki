@@ -4,129 +4,182 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Квартира: этапы и сроки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e4e2dc;
-  --red:#c8372d;--red-bg:#fbe9e7;--amb:#a86400;--amb-bg:#fdf1dc;--grn:#2f7d4f;--grn-bg:#e5f3ea;
-  --blu:#2c5fb3;--blu-bg:#e7eefb;--acc:#1d1d1f;
+  --bg:#EDF0F3;--card:#FFFFFF;--ink:#14202E;--mute:#5C6B7A;--line:#D6DCE3;--soft:#F5F7F9;
+  --sig:#F2C200;--sig-ink:#3A2E00;
+  --red:#D93A2B;--red-bg:#FCE9E7;--amb:#B26A00;--amb-bg:#FFF3D6;--grn:#1F8A5B;--grn-bg:#E3F4EC;
+  --blu:#2B5FD9;--blu-bg:#E6EDFC;
+  --r:14px;--disp:"Unbounded",system-ui,sans-serif;--body:"Manrope",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#141416;--card:#1e1e21;--ink:#ececee;--mute:#9a9aa1;--line:#2e2e33;
-  --red:#ff7a6e;--red-bg:#3a1f1d;--amb:#f2b35a;--amb-bg:#372a16;--grn:#6fcf97;--grn-bg:#1b3125;
-  --blu:#86a9ef;--blu-bg:#1d2840;--acc:#ececee;
+  --bg:#0E1520;--card:#162131;--ink:#E8EDF3;--mute:#93A1B2;--line:#26344A;--soft:#1B283A;
+  --sig:#F2C200;--sig-ink:#1A1400;
+  --red:#FF7466;--red-bg:#3A1C1A;--amb:#F2B35A;--amb-bg:#33280F;--grn:#5FD39C;--grn-bg:#14301F;--blu:#8DAEFF;--blu-bg:#1A2747;
 }}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-.wrap{max-width:980px;margin:0 auto;padding:24px 16px 64px}
-h1{font-size:24px;line-height:1.25;margin:0 0 4px}
-h2{font-size:18px;margin:36px 0 12px}
-.sub{color:var(--mute);margin:0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-.hero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-top:20px}
-.hero .big{font-size:40px;font-weight:700;line-height:1}
-.hero .lbl{color:var(--mute);font-size:13px}
-.alert{margin-top:12px;border-radius:12px;padding:12px 16px;background:var(--red-bg);color:var(--red);display:none}
-.alert b{color:inherit}
-.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-.inputs label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
-.inputs input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:40px}
-.hint{font-size:12px;color:var(--mute)}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-button,.btn{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
-button:hover,.btn:hover{border-color:var(--mute)}
-button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--blu);outline-offset:2px}
-.seg button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
-.list{display:flex;flex-direction:column;gap:8px}
-.ev{display:grid;grid-template-columns:28px 92px 1fr;gap:10px;align-items:start;padding:12px 14px;border-left:4px solid var(--line)}
-.ev.overdue{border-left-color:var(--red)}
-.ev.soon{border-left-color:var(--amb)}
-.ev.done{border-left-color:var(--grn);opacity:.72}
-.ev.upcoming{border-left-color:var(--blu)}
-.ev input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--grn)}
-.ev .date{font-variant-numeric:tabular-nums;font-weight:600}
-.ev .wd{font-size:12px;color:var(--mute)}
-.ev .t{font-weight:600}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 72px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--mute)}
+.top .brand{font-family:var(--disp);font-weight:600;font-size:13px;letter-spacing:.02em;color:var(--ink);display:flex;align-items:center;gap:8px}
+.top .brand i{width:10px;height:10px;border-radius:2px;background:var(--sig);display:inline-block}
+.mono,.ev .date,.pc,.day .n,.tl-tick{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1,h2{font-family:var(--disp);font-weight:600;letter-spacing:-.01em}
+h1{font-size:clamp(28px,5.4vw,52px);line-height:1.05;margin:28px 0 10px;max-width:16ch}
+h1 .n{color:var(--red)}
+h2{font-size:20px;margin:48px 0 14px}
+.sub{color:var(--mute);margin:0;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+/* hero */
+.hero{margin-top:4px}
+.hero .next{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.nx{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.nx .when{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.nx .t{font-weight:600;font-size:14px;line-height:1.35}
+.nx.crit{border-color:color-mix(in srgb,var(--red) 40%,var(--line))}
+.nx.soon .when{color:var(--amb)}
+/* timeline strip */
+.tl{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px 14px;overflow-x:auto}
+.tl-in{position:relative;min-width:780px;height:158px;margin:0 8px}
+.tl-axis{position:absolute;left:0;right:0;top:84px;height:4px;border-radius:2px;background:var(--line)}
+.tl-past{position:absolute;left:0;top:84px;height:4px;border-radius:2px;background:var(--ink)}
+.tl-n{position:absolute;top:78px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--card);border:3px solid var(--ink)}
+.tl-n.done{background:var(--ink)}
+.tl-n.crit{border-color:var(--red)}
+.tl-n.crit.done{background:var(--grn);border-color:var(--grn)}
+.tl-lab{position:absolute;z-index:1;background:var(--card);padding:0 3px;font-size:11.5px;line-height:1.25;width:110px;transform:translateX(-50%);text-align:center;color:var(--mute)}
+.tl-lab.l{transform:none;text-align:left}.tl-lab.r{transform:translateX(-100%);text-align:right}
+.tl-lab b{display:block;font-family:var(--mono);font-weight:500;color:var(--ink);font-size:11px}
+.tl-lab.up{top:30px}.tl-lab.dn{top:104px}
+.tl-today{position:absolute;top:22px;height:70px;width:2px;margin-left:-1px;background:var(--sig)}
+.tl-today span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--sig);color:var(--sig-ink);font:600 11px var(--mono);padding:2px 8px;border-radius:999px;white-space:nowrap}
+.tl-flag{position:absolute;top:0;margin-left:-1px;width:2px;height:88px;background:var(--red)}
+.tl-flag span{position:absolute;top:0;right:2px;background:var(--red);color:#fff;font:600 11px var(--mono);padding:2px 8px;border-radius:6px 0 0 6px;white-space:nowrap}
+.tl-tick{position:absolute;top:142px;font-size:10.5px;color:var(--mute);transform:translateX(-50%);text-transform:uppercase;letter-spacing:.05em}
+.alert{margin-top:12px;border-radius:var(--r);padding:12px 16px;background:var(--red-bg);color:var(--red);display:none;font-size:14px}
+/* inputs */
+.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.inputs label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink)}
+.inputs input{font:500 14px var(--mono);color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:42px}
+.hint{font-size:12px;color:var(--mute);font-weight:400}
+/* buttons */
+button,.btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px;transition:border-color .15s,background .15s}
+button:hover{border-color:var(--ink)}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--blu);outline-offset:2px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;align-items:center}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;min-height:34px;padding:6px 14px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.toolbar .sp{flex:1}
+/* progress segments */
+.prog{display:flex;gap:4px;margin-top:10px}
+.prog a{flex:1;height:10px;border-radius:3px;background:var(--line);position:relative;overflow:hidden;display:block}
+.prog a i{position:absolute;inset:0 auto 0 0;background:var(--grn)}
+.prog a.full i{background:var(--grn)}
+.prog a.bad{outline:2px solid var(--red);outline-offset:1px}
+.totline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14px}
+.totline b{font-family:var(--disp);font-size:22px;font-weight:600}
+/* phases */
+.phase{padding:0;margin-bottom:10px;scroll-margin-top:12px}
+.phase>summary{list-style:none;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:16px 18px;cursor:pointer}
+.phase>summary::-webkit-details-marker{display:none}
+.phase .pt{font-family:var(--disp);font-weight:500;font-size:15px}
+.phase .pc{font-size:12px;border-radius:999px;padding:3px 9px;background:var(--soft);color:var(--mute)}
+.phase .pc.p-done{background:var(--grn-bg);color:var(--grn)}
+.phase .pc.p-overdue{background:var(--red-bg);color:var(--red)}
+.phase .bar{grid-column:1/-1}
+.phase .list{padding:0 10px 10px}
+.bar{display:block;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--grn)}
+/* items */
+.list{display:flex;flex-direction:column;gap:6px}
+.ev{display:grid;grid-template-columns:26px 104px 1fr;gap:12px;align-items:start;padding:12px 14px;border-radius:12px;background:var(--soft);border:1px solid transparent}
+.list>.card.ev{background:var(--card);border-color:var(--line)}
+.ev.overdue{border-color:color-mix(in srgb,var(--red) 45%,transparent);background:var(--red-bg)}
+.ev.done .t{color:var(--mute);text-decoration:line-through;text-decoration-thickness:1px}
+.ev input[type=checkbox]{appearance:none;width:22px;height:22px;margin:0;border:2px solid var(--mute);border-radius:6px;background:var(--card);cursor:pointer;display:grid;place-content:center}
+.ev input[type=checkbox]:checked{background:var(--grn);border-color:var(--grn)}
+.ev input[type=checkbox]:checked::after{content:"";width:10px;height:6px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.ev .date{font-size:13px;font-weight:500}
+.ev .wd{font-size:11.5px;color:var(--mute)}
+.ev .t{font-weight:600;font-size:14.5px;line-height:1.4}
 .ev .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.pill{font-size:12px;border-radius:999px;padding:2px 8px;white-space:nowrap}
-.p-overdue{background:var(--red-bg);color:var(--red)}
+.pill{font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.p-overdue{background:var(--red);color:#fff}
 .p-soon{background:var(--amb-bg);color:var(--amb)}
 .p-done{background:var(--grn-bg);color:var(--grn)}
 .p-upcoming{background:var(--blu-bg);color:var(--blu)}
-.p-crit{background:var(--red);color:#fff}
-.p-est{background:var(--bg);color:var(--mute);border:1px dashed var(--line)}
+.p-nodate{background:var(--card);color:var(--mute);border:1px solid var(--line)}
+.p-crit{background:transparent;color:var(--red);border:1px solid color-mix(in srgb,var(--red) 50%,transparent)}
+.p-est{background:transparent;color:var(--mute);border:1px dashed var(--line)}
 details{margin-top:6px}
-summary{cursor:pointer;color:var(--mute);font-size:13px}
+summary{cursor:pointer;color:var(--mute);font-size:13px;font-weight:600}
 .det{font-size:14px;margin-top:6px}
-.det p{margin:4px 0}
+.det p{margin:6px 0}
 .det .k{color:var(--mute)}
-.gcal{font-size:13px;color:var(--blu)}
-.groupt{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin:20px 0 6px}
+.gcal{font-size:13px;color:var(--blu);font-weight:600;text-decoration:none}
+.gcal:hover{text-decoration:underline}
+.groupt{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin:22px 0 8px}
 /* calendar */
-.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.calhead .m{font-weight:600;font-size:16px}
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.calhead .m{font-family:var(--disp);font-weight:500;font-size:16px}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.dow{font-size:12px;color:var(--mute);text-align:center;padding:4px 0}
-.day{min-height:64px;border:1px solid var(--line);border-radius:8px;padding:4px 5px;font-size:12px;background:var(--card);cursor:pointer;text-align:left;display:block;color:var(--ink)}
+.dow{font:600 11px var(--mono);color:var(--mute);text-align:center;padding:4px 0;text-transform:uppercase}
+.day{min-height:66px;border:1px solid var(--line);border-radius:10px;padding:5px 6px;font-size:12px;background:var(--soft);cursor:pointer;text-align:left;display:block;color:var(--ink);font-weight:500}
+.day:hover{border-color:var(--ink)}
 .day.out{opacity:.35}
-.day.today{outline:2px solid var(--acc)}
+.day.today{background:var(--sig);border-color:var(--sig);color:var(--sig-ink)}
 .day.hol .n{color:var(--red)}
-.day .n{font-weight:600}
-.dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
-.dot{width:8px;height:8px;border-radius:50%}
-.d-overdue{background:var(--red)}.d-soon{background:var(--amb)}.d-done{background:var(--grn)}.d-upcoming{background:var(--blu)}
-.daypanel{margin-top:10px;display:none}
+.day.today.hol .n{color:var(--sig-ink)}
+.dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.d-overdue{background:var(--red)}.d-soon{background:var(--amb)}.d-done{background:var(--grn)}.d-upcoming{background:var(--blu)}.d-nodate{background:var(--mute)}
+.daypanel{margin-top:12px;display:none}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--mute);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+/* reference sections */
+.det details{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.det details:first-child{border-top:0;margin-top:0;padding-top:0}
+.det details>summary{color:var(--ink);font-size:14.5px}
+.det b{font-weight:700}
 table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--mute);font-weight:500;font-size:13px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font:600 11.5px var(--mono);text-transform:uppercase;letter-spacing:.04em}
 .tblwrap{overflow-x:auto}
-ol.law{padding-left:20px;margin:0}
-ol.law li{margin:6px 0}
+ol.law{padding-left:22px;margin:0}
+ol.law li{margin:8px 0}
+ol.law li::marker{font-family:var(--mono);color:var(--mute);font-size:12px}
 a{color:var(--blu)}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mute);margin-top:8px}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.foot{margin-top:40px;font-size:12px;color:var(--mute)}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--acc);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.foot{margin-top:48px;font-size:12px;color:var(--mute);border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
-@media (max-width:600px){
-  .hero{grid-template-columns:1fr}
-  .ev{grid-template-columns:24px 1fr}
+@media (max-width:700px){
+  .hero .next{grid-template-columns:1fr}
+  .ev{grid-template-columns:24px 1fr;gap:10px}
   .ev .when{grid-column:2}
   .ev .body{grid-column:2}
-  .day{min-height:48px;padding:3px}
-  .hero .big{font-size:32px}
+  .day{min-height:48px;padding:4px}
+  h2{font-size:18px}
 }
-@media (prefers-reduced-motion:reduce){.toast{transition:none}}
-
-.phase{padding:0;margin-bottom:10px}
-.phase>summary{list-style:none;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:14px 16px;cursor:pointer;color:var(--ink);font-size:15px}
-.phase>summary::-webkit-details-marker{display:none}
-.phase .pt{font-weight:600}
-.phase .pc{font-size:13px;border-radius:999px;padding:2px 8px;background:var(--bg);font-variant-numeric:tabular-nums}
-.phase .bar{grid-column:1/-1}
-.phase .list{padding:0 12px 12px}
-.bar{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--grn)}
-.bar.big{margin-top:8px;height:8px}
-.ev.nodate{border-left-color:var(--line)}
-.p-nodate{background:var(--bg);color:var(--mute)}
-.d-nodate{background:var(--mute)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.toast,button{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Квартира: этапы и сроки</h1>
-  <p class="sub">Долевое строительство с УКС + кредит «Строительство недвижимости». Сегодня: <b id="today"></b></p>
-
-  <div class="card hero" id="hero"></div>
+  <div class="top"><span class="brand"><i></i>Квартира · сроки</span><span>Сегодня <b class="mono" id="today"></b></span></div>
+  <section class="hero" id="hero"></section>
   <div class="alert" id="alert" role="alert"></div>
 
-  <h2>Даты, которые ещё не известны</h2>
+  <h2>Даты по факту</h2>
   <div class="card">
     <div class="inputs">
       <label>Акт приёмки-передачи подписан
         <input type="date" id="in-akt"><span class="hint">Приёмка 20.11, ориентир акта 27.11. От неё: замечания УКС (3 мес.) и гарантия (5 лет)</span></label>
-      <label>Подписание ипотеки у нотариуса
-        <input type="date" id="in-notary"><span class="hint">Ориентир — до 8 декабря</span></label>
+      <label>Подписание ипотеки в агентстве (БТИ)
+        <input type="date" id="in-notary"><span class="hint">Дату назначает банк. Ориентир — до 8–10 декабря</span></label>
       <label>Ипотека зарегистрирована
         <input type="date" id="in-ipreg"><span class="hint">От неё: полис +10 дней, прописка детей</span></label>
       <label>Начало страхового полиса
@@ -137,8 +190,8 @@ a{color:var(--blu)}
     <p class="hint" style="margin:10px 0 0">Даты и отметки «сделано» хранятся только в этом браузере и на этом устройстве. <button id="reset" style="min-height:32px;padding:4px 10px;font-size:13px;margin-left:6px">Сбросить отметки</button></p>
   </div>
 
-  <h2>Чек-лист: от договора до закрытия кредита</h2>
-  <div class="card" id="total" style="margin-bottom:12px"></div>
+  <h2>Чек-лист по этапам</h2>
+  <div class="card" id="total"></div>
   <div class="toolbar">
     <div class="seg" role="group" aria-label="Вид">
       <button data-view="phases" aria-pressed="true">По этапам</button>
@@ -149,7 +202,7 @@ a{color:var(--blu)}
       <button data-f="all" aria-pressed="false">Все</button>
       <button data-f="done" aria-pressed="false">Сделано</button>
     </div>
-    <button id="ics">Скачать .ics</button>
+    <span class="sp"></span><button id="ics">Добавить в календарь телефона (.ics)</button>
     <button id="icscopy">Скопировать .ics</button>
   </div>
   <div id="list"></div>
@@ -319,15 +372,15 @@ window.buildItems=function(S,H){
  add("p4",{id:"k4",d:addM(akt||D("2026-11-27"),60),est:!akt,t:"Конец гарантийного срока (5 лет от акта)",basis:"Договор п. 8"});
  // 5
  add("p5",{id:"c9",d:addD(D("2026-09-30"),60),t:"Оригиналы свидетельства и техпаспорта в банк (60 дней от ввода)",crit:1,basis:"Кредитный договор п. 2.1.1; предварительный договор ипотеки п. 9.10",pen:"0,5 БВ в день; право банка на досрочное погашение",note:"Сдано 17.11.2026"});
- add("p5",{id:"a1",d:D("2026-11-20"),t:"Позвонить в отдел розничного бизнеса: запись к нотариусу и вопросы",note:"Подойдёт ли справка от УКС? Нужен ли осмотр для акта оценки? Засчитают ли полис, оформленный до регистрации ипотеки?"});
+ add("p5",{id:"a1",d:D("2026-11-20"),t:"Позвонить в отдел розничного бизнеса: когда банк подготовит договор ипотеки и назначит выезд в БТИ",note:"Спросить: подойдёт ли справка от УКС? Нужен ли осмотр для акта оценки? Сколько стоит регистрация и кто платит? Засчитают ли полис, оформленный до регистрации ипотеки?"});
  add("p5",{id:"a2",d:D("2026-11-27"),t:"Справка о зарегистрированных в квартире (от УКС, пока дом не передан РСЦ)",crit:1,basis:"Памятка банка, шаг 2; форма справки — постановление Минжилкомхоза №58",note:"Действует 1 месяц. Если РСЦ отказывает — взять письменный ответ."});
- add("p5",{id:"a3",d:D("2026-12-01"),t:"Заказать выписку из ЕГРНиЗК для нотариуса",note:"Действует 1 месяц"});
- add("p5",{id:"a4",d:I.notary?D(I.notary):D("2026-12-08"),est:!I.notary,t:"Подписать договор ипотеки у нотариуса (с супругой-сособственником)",crit:1,note:"Взять: справку, выписку, кредитный договор и договор строительства с допсоглашениями, свидетельство, паспорта, 350–400 руб."});
- add("p5",{id:"a5",d:D("2026-12-10"),t:"Контроль: если справки всё ещё нет, подать письменное заявление в банк",note:"С входящим номером, с ответами РСЦ и УКС: попросить отсрочку или допсоглашение"});
+ add("p5",{id:"a3",t:"Выписка из ЕГРНиЗК не нужна: договор оформляется в агентстве, а не у нотариуса",note:"По памятке выписка нужна только для нотариального удостоверения. На всякий случай уточнить у банка"});
+ add("p5",{id:"a4",d:I.notary?D(I.notary):D("2026-12-08"),est:!I.notary,t:"Подписать и зарегистрировать ипотеку в агентстве (БТИ) с представителем банка, вместе с супругой-сособственником",crit:1,basis:"Памятка банка, шаг 2, п. 3–5",note:"Договор готовит банк. Взять оригиналы: справку о зарегистрированных, кредитный договор и договор строительства с допсоглашениями, свидетельство, паспорта обоих, деньги на регистрацию (по памятке 350–400 руб. вместе с удостоверением; без нотариуса может выйти меньше)."});
+ add("p5",{id:"a5",d:D("2026-12-10"),t:"Контроль: если справки или договора от банка всё ещё нет — письменное заявление в банк",note:"С входящим номером: что вы готовы, а что задерживается (ответы РСЦ и УКС). Попросить назначить дату или продлить срок"});
  add("p5",{id:"a6",d:ipReg||IPD,t:ipReg?"Ипотека зарегистрирована":"КРАЙНИЙ СРОК: ипотека зарегистрирована",crit:1,
    basis:"Кредитный договор п. 1.5, 2.1.3; предварительный договор п. 9.11. 45-й день — "+fmt(IPF)+" (праздник), поэтому ориентир "+fmt(IPD),
    pen:"Банк вправе потребовать погасить весь кредит (п. 2.1.4); штраф 1% по договору залога прав"});
- add("p5",{id:"a7",d:addWork(ipReg||IPD,5),est:!ipReg,t:"Копию свидетельства об обременении — в банк",basis:"Памятка банка, шаг 2, п. 6"});
+ add("p5",{id:"a7",d:addWork(ipReg||IPD,5),est:!ipReg,t:"Договор ипотеки и свидетельство об обременении — в банк (если не забрал представитель банка)",basis:"Памятка банка, шаг 2, п. 6"});
  add("p5",{id:"a8",d:addD(ipReg||IPD,10),est:!ipReg,t:"Страховой полис — в банк (10 дней после регистрации ипотеки)",crit:1,basis:"Кредитный договор п. 2.1.2; памятка, шаг 3",pen:"0,5 БВ в день",
    note:"Страхователь вы, выгодоприобретатель Приорбанк. Срок 1 год, BYN, сумма не меньше остатка основного долга. Можно на doc@priorbank.by, тема «Недвижимость: страхование», со своей почты, с М-кодом."});
  add("p5",{id:"a8b",t:"(По желанию) застраховать квартиру сразу после акта и ответственность перед соседями на время ремонта",note:"Риск переходит на вас с даты акта, а ипотечный полис нужен только после регистрации ипотеки"});
@@ -444,7 +497,7 @@ function renderPhases(){
     const dn=its.filter(e=>e.st==="done").length, tot=its.length;
     const od=its.some(e=>e.st==="overdue"), allDone=dn===tot;
     const open=!allDone;
-    h+=`<details class="phase card" ${open?"open":""}><summary><span class="pt">${esc(p.t)}</span><span class="pc ${od?"p-overdue":allDone?"p-done":""}">${dn}/${tot}</span>
+    h+=`<details class="phase card" id="ph-${p.id}" ${open?"open":""}><summary><span class="pt">${esc(p.t)}</span><span class="pc ${od?"p-overdue":allDone?"p-done":""}">${dn} / ${tot}</span>
       <span class="bar"><i style="width:${Math.round(dn/tot*100)}%"></i></span></summary><div class="list">${its.map(e=>evHTML(e,false)).join("")}</div></details>`;
   });
   return h;
@@ -461,15 +514,39 @@ function renderMain(){
   document.getElementById("filters").style.display=VIEW==="timeline"?"inline-flex":"none";
   document.getElementById("list").innerHTML=VIEW==="phases"?renderPhases():renderTimeline();
   const all=IT.length,dn=IT.filter(e=>e.st==="done").length;
-  document.getElementById("total").innerHTML=`Выполнено <b>${dn}</b> из ${all}<span class="bar big"><i style="width:${Math.round(dn/all*100)}%"></i></span>`;
+  const seg=window.PHASES.map(p=>{const its=IT.filter(e=>e.ph===p.id),d2=its.filter(e=>e.st==="done").length,od=its.some(e=>e.st==="overdue");
+    return `<a href="#ph-${p.id}" class="${d2===its.length?"full":""} ${od?"bad":""}" title="${esc(p.t)}: ${d2} из ${its.length}"><i style="width:${Math.round(d2/its.length*100)}%"></i></a>`}).join("");
+  document.getElementById("total").innerHTML=`<div class="totline"><span>Сделано <b>${dn}</b> из ${all} пунктов</span><span class="hint">10 этапов, от договора до закрытия кредита</span></div><div class="prog">${seg}</div>`;
 }
+function plural(n,a,b,c){n=Math.abs(n)%100;const m=n%10;if(n>10&&n<20)return c;if(m>1&&m<5)return b;if(m===1)return a;return c}
 function renderHero(){
+  const h=document.getElementById("hero");
+  const main=IT.find(e=>e.id==="a6");
   const crit=IT.filter(e=>e.crit&&e.d&&e.st!=="done"&&diff(e.d)>=0).sort(byDate);
-  const nx=crit[0],h=document.getElementById("hero");
-  h.innerHTML=nx?`<div><div class="lbl">Ближайший важный срок</div><div style="font-weight:600;font-size:17px;margin-top:4px">${esc(nx.t)}</div><div class="lbl" style="margin-top:4px">${fmt(nx.d)}, ${WD[nx.d.getDay()]}${nx.est?" · ориентировочно":""}</div></div>
-    <div style="text-align:right"><div class="big">${diff(nx.d)}</div><div class="lbl">дн. осталось</div></div>`:"<div>Важных сроков впереди нет.</div>";
+  const goal=(main&&main.st!=="done")?main:crit[0];
+  let head;
+  if(goal){const n=diff(goal.d);
+    head=goal.id==="a6"?`До регистрации ипотеки <span class="n">${n} ${plural(n,"день","дня","дней")}</span>`:`${esc(goal.t)}: <span class="n">${n} ${plural(n,"день","дня","дней")}</span>`;
+  } else head="Банковские сроки закрыты";
+  const sub=goal&&goal.id==="a6"?`Крайний срок — ${fmt(goal.d)}, ${WD[goal.d.getDay()]}. После него банк вправе потребовать досрочного погашения кредита.`:"";
+  const next=IT.filter(e=>e.d&&e.st!=="done"&&diff(e.d)>=0).sort(byDate).slice(0,3);
+  const nx=next.map(e=>`<div class="nx ${e.crit?"crit":""} ${e.st}"><span class="when">${fmt(e.d)} · ${WD[e.d.getDay()]} · ${rel(e).replace(" · ","")}</span><span class="t">${esc(e.t)}</span></div>`).join("");
+  // timeline
+  const T0=D("2026-08-20"), T1=addD(D("2026-12-24"),18);
+  const span=T1-T0, pos=d=>Math.max(0,Math.min(100,(d-T0)/span*100));
+  const keyIds=["c1","c2","c3b","c6","k0","k2","a4","a6","a8"];
+  const short={c1:"Договор с УКС",c2:"Кредит",c3b:"Ввод дома",c6:"Право собств.",c9:"Оригиналы в банк",k0:"Приёмка",k2:"Акт",a4:"Ипотека в БТИ",a6:"Срок банка",a8:"Полис"};
+  const ks=keyIds.map(id=>IT.find(e=>e.id===id)).filter(e=>e&&e.d&&e.d>=T0&&e.d<=T1).sort(byDate);
+  let t=`<div class="tl-axis"></div><div class="tl-past" style="width:${pos(TODAY)}%"></div>`;
+  ["2026-09-01","2026-10-01","2026-11-01","2026-12-01","2027-01-01"].forEach(m=>{const d=D(m);if(d<=T1)t+=`<span class="tl-tick" style="left:${pos(d)}%">${MON[d.getMonth()].slice(0,3).toLowerCase()}</span>`});
+  ks.forEach((e,i)=>{if(e.id==="a6")return;const x=pos(e.d);
+    const al=x<6?"l":x>94?"r":"";t+=`<i class="tl-n ${e.st==="done"?"done":""} ${e.crit?"crit":""}" style="left:${x}%" title="${esc(e.t)}"></i><span class="tl-lab ${i%2?"dn":"up"} ${al}" style="left:${x}%"><b>${fmt(e.d).slice(0,5)}</b>${short[e.id]}</span>`});
+  if(main&&main.d<=T1)t+=`<span class="tl-flag" style="left:${pos(main.d)}%"><span>${fmt(main.d).slice(0,5)} срок банка</span></span>`;
+  t+=`<span class="tl-today" style="left:${pos(TODAY)}%"><span>сегодня</span></span>`;
+  h.innerHTML=`<h1>${head}</h1><p class="sub">${sub}</p><div class="tl" aria-label="Путь от договора до ипотеки"><div class="tl-in">${t}</div></div><div class="next">${nx}</div>`;
+  const tl=h.querySelector(".tl"),tin=h.querySelector(".tl-in");if(tl.scrollWidth>tl.clientWidth)tl.scrollLeft=tin.offsetWidth*pos(TODAY)/100-tl.clientWidth*0.55;
   const od=IT.filter(e=>e.st==="overdue");const a=document.getElementById("alert");
-  if(od.length){a.style.display="block";a.innerHTML="<b>Просрочено: "+od.length+"</b> — "+od.map(e=>esc(e.t)+" ("+fmt(e.d)+")").join("; ")+". Если уже сделано, поставьте галочку.";}else a.style.display="none";
+  if(od.length){a.style.display="block";a.innerHTML="<b>Просрочено: "+od.length+"</b> — "+od.map(e=>esc(e.t)+" ("+fmt(e.d)+")").join("; ")+". Если уже сделано, отметьте пункт.";}else a.style.display="none";
 }
 function renderCal(){
   if(!VM)VM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1,12);
@@ -506,7 +583,7 @@ function ics(){
 }
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2400)}
 
-document.getElementById("today").textContent=fmt(TODAY)+", "+WD[TODAY.getDay()];
+document.getElementById("today").textContent=fmt(TODAY)+" · "+WD[TODAY.getDay()];
 const map={akt:"in-akt",notary:"in-notary",ipreg:"in-ipreg",policy:"in-policy",family:"in-family"};
 const auto={akt:["k2"],ipreg:["a6"],family:["r1"]};
 Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);el.value=S.inp[k]||"";
